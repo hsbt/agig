@@ -14,4 +14,6 @@ Gem::Specification.new do |gem|
   gem.name          = "agig"
   gem.require_paths = ["lib"]
   gem.version       = Agig::VERSION
+
+  gem.add_dependency 'net-irc', ['>= 0']
 end

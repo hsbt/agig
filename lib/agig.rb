@@ -1,5 +1,13 @@
-require "agig/version"
+=begin
+# gig.rb
 
-module Agig
-  # Your code goes here...
-end
+Github IRC Gateway
+
+=end
+
+$KCODE = "u" unless defined? ::Encoding
+
+require "agig/version"
+require "agig/client"
+require "agig/optparse"
+require "agig/session"
