@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'net/irc'
 require 'net/https'
 require 'libxml'

@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'net/irc'
 require 'logger'
 
 module Agig::Client
