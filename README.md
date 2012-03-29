@@ -1,6 +1,6 @@
 # Agig
 
-TODO: Write a gem description
+Agig is another Github IRC Gateway, forked cho45's [gig.rb](https://github.com/cho45/net-irc/blob/master/examples/gig.rb)
 
 ## Installation
 
@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    $ agig -d
 
 ## Contributing
 
