@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'net/irc'
 require 'net/https'
-require 'libxml'
+require 'nokogiri'
 require 'ostruct'
 require 'time'
 
@@ -41,6 +41,7 @@ class Agig::Session < Net::IRC::Server::Session
 
   def on_user(m)
     super
+
     @real, *@opts = @real.split(/\s+/)
     @opts = OpenStruct.new @opts.inject({}) {|r, i|
       key, value = i.split("=", 2)
@@ -65,16 +66,14 @@ class Agig::Session < Net::IRC::Server::Session
           req = Net::HTTP::Get.new(uri.request_uri)
           res = http.request(req)
 
-          doc = LibXML::XML::Document.string(res.body, :base_uri => uri.to_s)
-          ns  = %w|a:http://www.w3.org/2005/Atom|
-            entries = []
-          doc.find('/a:feed/a:entry', ns).each do |n|
-            entries << {
-              :datetime => Time.parse(n.find('string(a:published)', ns)),
-              :id       => n.find('string(a:id)', ns),
-              :title    => n.find('string(a:title)', ns),
-              :author   => n.find('string(a:author/a:name)', ns),
-              :link     => n.find('string(a:link/@href)', ns),
+          ns  = {'a' => 'http://www.w3.org/2005/Atom'}
+          entries = Nokogiri::XML(res.body).xpath('/a:feed/a:entry', ns).map do |entry|
+            {
+              :datetime => Time.parse(entry.xpath('string(a:published)', ns)),
+              :id       => entry.xpath('string(a:id)', ns),
+              :title    => entry.xpath('string(a:title)', ns),
+              :author   => entry.xpath('string(a:author/a:name)', ns),
+              :link     => entry.xpath('string(a:link/@href)', ns),
             }
           end
 

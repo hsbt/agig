@@ -16,5 +16,5 @@ Gem::Specification.new do |gem|
   gem.version       = Agig::VERSION
 
   gem.add_dependency 'net-irc', ['>= 0']
-  gem.add_dependency 'libxml-ruby', ['>= 0']
+  gem.add_dependency 'nokogiri', ['>= 0']
 end
