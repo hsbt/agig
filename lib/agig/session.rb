@@ -17,6 +17,13 @@ class Agig::Session < Net::IRC::Server::Session
     'PushEvent'     => '14',
   }
 
+  ACTIVITIES = %w(
+    GistEvent
+    ForkEvent
+    FollowEvent
+    WatchEvent
+  )
+
   def server_name
     "github"
   end
@@ -51,7 +58,7 @@ class Agig::Session < Net::IRC::Server::Session
                       else                               value
                       end
     }
-    post @nick, JOIN, main_channel
+    [main_channel, '#activity'].each {|c| post @nick, JOIN, c }
 
     @retrieve_thread = Thread.start do
       loop do
@@ -72,8 +79,8 @@ class Agig::Session < Net::IRC::Server::Session
           entries.reverse_each do |entry|
             next if entry[:datetime] <= @last_retrieved
             type = entry[:id][%r|tag:github.com,2008:(.+?)/\d+|, 1]
-            post entry[:author], PRIVMSG, main_channel,
-            "\003#{EVENTS[type] || '5'}#{entry[:title]}\017 \00314#{entry[:link]}\017"
+            channel = ACTIVITIES.include? type ? '#activity' : main_channel
+            post entry[:author], PRIVMSG, channel, "\003#{EVENTS[type] || '5'}#{entry[:title]}\017 \00314#{entry[:link]}\017"
           end
 
           @last_retrieved = entries.first[:datetime]
