@@ -2,6 +2,12 @@
 
 Agig is another Github IRC Gateway, forked cho45's [gig.rb](https://github.com/cho45/net-irc/blob/master/examples/gig.rb)
 
+Modified from original gig.rb:
+
+ * use Nokogiri instead of libxml-ruby
+ * use open-uri instead of net/https
+ * create new channel, it includes user activities.
+
 ## Installation
 
 Add this line to your application's Gemfile:
