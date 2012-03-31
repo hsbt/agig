@@ -1,7 +1,8 @@
 require 'rubygems'
 require 'net/irc'
-require 'net/https'
 require 'nokogiri'
+
+require 'open-uri'
 require 'ostruct'
 require 'time'
 
@@ -31,8 +32,6 @@ class Agig::Session < Net::IRC::Server::Session
   def initialize(*args)
     super
     @last_retrieved = Time.now
-    @cert_store = OpenSSL::X509::Store.new
-    @cert_store.set_default_paths
   end
 
   def on_disconnected
@@ -58,16 +57,9 @@ class Agig::Session < Net::IRC::Server::Session
       loop do
         begin
           @log.info 'retrieveing feed...'
-          uri = URI.parse("https://github.com/#{@real}.private.atom?token=#{@pass}")
-          http = Net::HTTP.new(uri.host, uri.port)
-          http.use_ssl = true
-          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-          http.cert_store = @cert_store
-          req = Net::HTTP::Get.new(uri.request_uri)
-          res = http.request(req)
-
+          atom = open("https://github.com/#{@real}.private.atom?token=#{@pass}").read
           ns  = {'a' => 'http://www.w3.org/2005/Atom'}
-          entries = Nokogiri::XML(res.body).xpath('/a:feed/a:entry', ns).map do |entry|
+          entries = Nokogiri::XML(atom).xpath('/a:feed/a:entry', ns).map do |entry|
             {
               :datetime => Time.parse(entry.xpath('string(a:published)', ns)),
               :id       => entry.xpath('string(a:id)', ns),
