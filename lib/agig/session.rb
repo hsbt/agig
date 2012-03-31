@@ -79,7 +79,7 @@ class Agig::Session < Net::IRC::Server::Session
           entries.reverse_each do |entry|
             next if entry[:datetime] <= @last_retrieved
             type = entry[:id][%r|tag:github.com,2008:(.+?)/\d+|, 1]
-            channel = ACTIVITIES.include? type ? '#activity' : main_channel
+            channel = ACTIVITIES.include?(type) ? '#activity' : main_channel
             post entry[:author], PRIVMSG, channel, "\003#{EVENTS[type] || '5'}#{entry[:title]}\017 \00314#{entry[:link]}\017"
           end
 
