@@ -64,7 +64,7 @@ class Agig::Session < Net::IRC::Server::Session
       loop do
         begin
           @log.info 'retrieveing feed...'
-          atom = open("https://github.com/#{@real}.private.atom?token=#{@pass}").read
+          atom = open("https://github.com/#{@nick}.private.atom?token=#{@pass}").read
           ns  = {'a' => 'http://www.w3.org/2005/Atom'}
           entries = Nokogiri::XML(atom).xpath('/a:feed/a:entry', ns).map do |entry|
             {
