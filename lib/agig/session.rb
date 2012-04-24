@@ -17,12 +17,14 @@ class Agig::Session < Net::IRC::Server::Session
     'PushEvent'     => '14',
   }
 
-  ACTIVITIES = %w(
-    GistEvent
-    ForkEvent
-    FollowEvent
-    WatchEvent
-  )
+  CHANNEL_SELECTOR = {
+    'GistEvent'                     => '#activity',
+    'ForkEvent'                     => '#activity',
+    'FollowEvent'                   => '#activity',
+    'WatchEvent'                    => '#activity',
+    'PullRequestEvent'              => '#pull_requests',
+    'PullRequestReviewCommentEvent' => '#pull_requests',
+  }
 
   def server_name
     "github"
@@ -34,6 +36,14 @@ class Agig::Session < Net::IRC::Server::Session
 
   def main_channel
     @opts.main_channel || "#github"
+  end
+
+  def channels
+    CHANNEL_SELECTOR.values.uniq << main_channel
+  end
+
+  def channel(type)
+    CHANNEL_SELECTOR[type] || main_channel
   end
 
   def initialize(*args)
@@ -58,7 +68,7 @@ class Agig::Session < Net::IRC::Server::Session
                       else                               value
                       end
     }
-    [main_channel, '#activity'].each {|c| post @nick, JOIN, c }
+    channels.each {|c| post @nick, JOIN, c }
 
     @retrieve_thread = Thread.start do
       loop do
@@ -79,8 +89,7 @@ class Agig::Session < Net::IRC::Server::Session
           entries.reverse_each do |entry|
             next if entry[:datetime] <= @last_retrieved
             type = entry[:id][%r|tag:github.com,2008:(.+?)/\d+|, 1]
-            channel = ACTIVITIES.include?(type) ? '#activity' : main_channel
-            post entry[:author], PRIVMSG, channel, "\003#{EVENTS[type] || '5'}#{entry[:title]}\017 \00314#{entry[:link]}\017"
+            post entry[:author], PRIVMSG, channel(type), "\003#{EVENTS[type] || '5'}#{entry[:title]}\017 \00314#{entry[:link]}\017"
           end
 
           @last_retrieved = entries.first[:datetime]
