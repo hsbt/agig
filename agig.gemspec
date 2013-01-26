@@ -15,6 +15,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Agig::VERSION
 
-  gem.add_dependency 'net-irc', ['>= 0']
-  gem.add_dependency 'nokogiri', ['>= 0']
+  gem.add_dependency 'net-irc'
+  gem.add_dependency 'nokogiri'
+  gem.add_dependency 'certified'
 end

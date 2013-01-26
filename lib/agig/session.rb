@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'net/irc'
 require 'nokogiri'
+require 'certified'
 
 require 'open-uri'
 require 'ostruct'
