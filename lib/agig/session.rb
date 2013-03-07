@@ -1,10 +1,7 @@
-require 'rubygems'
-require 'net/irc'
-require 'octokit'
-
-require 'open-uri'
 require 'ostruct'
 require 'time'
+require 'net/irc'
+require 'octokit'
 
 class Agig::Session < Net::IRC::Server::Session
   def server_name
@@ -25,7 +22,7 @@ class Agig::Session < Net::IRC::Server::Session
   end
 
   def client
-    @client ||= Octokit::Client.new(:login => @nick, :password => @pass)
+    @client ||= Octokit::Client.new(login: @nick, password: @pass)
   end
 
   def on_disconnected
@@ -55,7 +52,6 @@ class Agig::Session < Net::IRC::Server::Session
           entries = client.notifications
 
           entries.sort_by(&:updated_at).reverse_each do |entry|
-            @log.info "#{Time.parse(entry[:updated_at]).utc} <= #{@last_retrieved.utc}"
             updated_at = Time.parse(entry[:updated_at]).utc
             next if updated_at <= @last_retrieved
 

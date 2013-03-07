@@ -8,6 +8,8 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{agig is another Github IRC Gateway. agig is forked from gig.rb, and contained net-irc gems.}
   gem.homepage      = "https://github.com/hsbt/agig"
 
+  gem.required_ruby_version = Gem::Requirement.new(">= 1.9.2")
+
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
