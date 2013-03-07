@@ -17,5 +17,4 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'net-irc'
   gem.add_dependency 'nokogiri'
-  gem.add_dependency 'certified'
 end
