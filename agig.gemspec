@@ -16,5 +16,6 @@ Gem::Specification.new do |gem|
   gem.version       = Agig::VERSION
 
   gem.add_dependency 'net-irc'
-  gem.add_dependency 'nokogiri'
+  gem.add_dependency 'json'
+  gem.add_dependency 'octokit'
 end
