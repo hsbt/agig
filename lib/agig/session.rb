@@ -18,7 +18,7 @@ class Agig::Session < Net::IRC::Server::Session
 
   def initialize(*args)
     super
-    @last_retrieved = Time.now
+    @last_retrieved = Time.now.utc
   end
 
   def client
