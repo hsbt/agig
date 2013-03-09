@@ -50,16 +50,23 @@ class Agig::Session < Net::IRC::Server::Session
           @log.info 'retrieveing feed...'
 
           entries = client.notifications
-
           entries.sort_by(&:updated_at).reverse_each do |entry|
             updated_at = Time.parse(entry[:updated_at]).utc
             next if updated_at <= @last_retrieved
 
             subject = entry['subject']
             post entry['repository']['owner']['login'], PRIVMSG, "#github", "\0035#{subject['title']}\017 \00314#{subject['latest_comment_url']}\017"
-
-            @last_retrieved = updated_at
           end
+
+          events = client.received_events('hsbt')
+          events.sort_by(&:created_at).reverse_each do |event|
+            created_at = Time.parse(event.created_at).utc
+            next if created_at <= @last_retrieved || event.type != "WatchEvent"
+
+            post event.actor.login, PRIVMSG, "#watch", "\0035#{event.payload.action}\017 \00314http://github.com/#{event.repo.name}\017"
+          end
+
+          @last_retrieved = Time.now.utc
 
           @log.info 'sleep'
           sleep 30
