@@ -12,8 +12,8 @@ class Agig::Session < Net::IRC::Server::Session
     "0.0.0"
   end
 
-  def channel
-    "#github"
+  def channels
+    ['#github', '#watch']
   end
 
   def initialize(*args)
@@ -42,7 +42,7 @@ class Agig::Session < Net::IRC::Server::Session
                       else                               value
                       end
     }
-    post @nick, JOIN, channel
+    channels.each{|channel| post @nick, JOIN, channel }
 
     @retrieve_thread = Thread.start do
       loop do
@@ -61,7 +61,8 @@ class Agig::Session < Net::IRC::Server::Session
           events = client.received_events('hsbt')
           events.sort_by(&:created_at).reverse_each do |event|
             created_at = Time.parse(event.created_at).utc
-            next if created_at <= @last_retrieved || event.type != "WatchEvent"
+            next if event.type != "WatchEvent"
+            next if created_at <= @last_retrieved
 
             post event.actor.login, PRIVMSG, "#watch", "\0035#{event.payload.action}\017 \00314http://github.com/#{event.repo.name}\017"
           end
