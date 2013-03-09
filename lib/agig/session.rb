@@ -51,11 +51,10 @@ class Agig::Session < Net::IRC::Server::Session
 
           entries = client.notifications
           entries.sort_by(&:updated_at).reverse_each do |entry|
-            updated_at = Time.parse(entry[:updated_at]).utc
+            updated_at = Time.parse(entry.updated_at).utc
             next if updated_at <= @notification_last_retrieved
 
-            subject = entry['subject']
-            post entry['repository']['owner']['login'], PRIVMSG, "#notification", "\0035#{subject['title']}\017 \00314#{subject['latest_comment_url']}\017"
+            post entry.repository.owner.login, PRIVMSG, "#notification", "\0035#{entry.subject.title}\017 \00314#{entry.subject.latest_comment_url}\017"
             @notification_last_retrieved = updated_at
           end
 
