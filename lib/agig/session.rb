@@ -13,12 +13,12 @@ class Agig::Session < Net::IRC::Server::Session
   end
 
   def channels
-    ['#github', '#watch']
+    ['#notification', '#watch']
   end
 
   def initialize(*args)
     super
-    @github_last_retrieved = @watch_last_retrieved = Time.now.utc - 3600
+    @notification_last_retrieved = @watch_last_retrieved = Time.now.utc - 3600
   end
 
   def client
@@ -52,11 +52,11 @@ class Agig::Session < Net::IRC::Server::Session
           entries = client.notifications
           entries.sort_by(&:updated_at).reverse_each do |entry|
             updated_at = Time.parse(entry[:updated_at]).utc
-            next if updated_at <= @github_last_retrieved
+            next if updated_at <= @notification_last_retrieved
 
             subject = entry['subject']
-            post entry['repository']['owner']['login'], PRIVMSG, "#github", "\0035#{subject['title']}\017 \00314#{subject['latest_comment_url']}\017"
-            @github_last_retrieved = updated_at
+            post entry['repository']['owner']['login'], PRIVMSG, "#notification", "\0035#{subject['title']}\017 \00314#{subject['latest_comment_url']}\017"
+            @notification_last_retrieved = updated_at
           end
 
           events = client.received_events('hsbt')
