@@ -58,7 +58,7 @@ class Agig::Session < Net::IRC::Server::Session
             @notification_last_retrieved = updated_at
           end
 
-          events = client.received_events('hsbt')
+          events = client.received_events(@nick)
           events.sort_by(&:created_at).reverse_each do |event|
             next if event.type != "WatchEvent"
 
