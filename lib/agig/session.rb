@@ -54,7 +54,9 @@ class Agig::Session < Net::IRC::Server::Session
             updated_at = Time.parse(entry.updated_at).utc
             next if updated_at <= @notification_last_retrieved
 
-            post entry.repository.owner.login, PRIVMSG, "#notification", "\0035#{entry.subject.title}\017 \00314#{entry.subject.latest_comment_url}\017"
+            reachable_url = reachable_url_for(entry.subject.latest_comment_url)
+
+            post entry.repository.owner.login, PRIVMSG, "#notification", "\0035#{entry.subject.title}\017 \00314#{reachable_url}\017"
             @notification_last_retrieved = updated_at
           end
 
@@ -79,6 +81,22 @@ class Agig::Session < Net::IRC::Server::Session
           sleep 10
         end
       end
+    end
+  end
+
+  def reachable_url_for(latest_comment_url)
+    repos_owner = latest_comment_url.match(/repos\/(.+?\/.+?)\//)[1]
+    if issue_match = latest_comment_url.match(/issues\/(\d+?)$/)
+      issue_id = issue_match[1]
+      client.issue_comments(repos_owner, issue_id).html_url
+    end
+    if pull_match = latest_comment_url.match(/pulls\/(\d+?)$/)
+      pull_id = pull_match[1]
+      client.issue_comments(repos_owner, pull_id).html_url
+    end
+    if comment_match = latest_comment_url.match(/comments\/(\d+?)$/)
+      comment_id = comment_match[1]
+      client.issue_comment(repo_owner, comment_id).html_url
     end
   end
 end
