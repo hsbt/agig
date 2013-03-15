@@ -8,22 +8,9 @@ Modified from original gig.rb:
  * use open-uri instead of net/https
  * create new channel, it includes user activities.
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'agig'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+## Installation and Usage
 
     $ gem install agig
-
-## Usage
-
     $ agig -d
 
 ## Contributing
@@ -33,3 +20,8 @@ Or install it yourself as:
 3. Commit your changes (`git commit -am 'Added some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Contributor
+
+ * @morygonzalez
+
