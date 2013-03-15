@@ -88,7 +88,8 @@ class Agig::Session < Net::IRC::Server::Session
     repos_owner = latest_comment_url.match(/repos\/(.+?\/.+?)\//)[1]
     if issue_match = latest_comment_url.match(/(?:issues|pulls)\/(\d+?)$/)
       issue_id = issue_match[1]
-      client.issue_comments(repos_owner, issue_id)[0]['html_url']
+      latest_comment = client.issue_comments(repos_owner, issue_id).last
+      latest_comment ? latest_comment['html_url'] : latest_comment_url.sub(/api\./, '').sub(/repos\//, '')
     elsif comment_match = latest_comment_url.match(/comments\/(\d+?)$/)
       comment_id = comment_match[1]
       client.issue_comment(repos_owner, comment_id)['html_url']
