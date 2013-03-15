@@ -91,7 +91,7 @@ class Agig::Session < Net::IRC::Server::Session
       client.issue_comments(repos_owner, issue_id)[0]['html_url']
     elsif comment_match = latest_comment_url.match(/comments\/(\d+?)$/)
       comment_id = comment_match[1]
-      client.issue_comment(repo_owner, comment_id)[0]['html_url']
+      client.issue_comment(repos_owner, comment_id)['html_url']
     else
       nil
     end
