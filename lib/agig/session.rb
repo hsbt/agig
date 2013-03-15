@@ -86,17 +86,14 @@ class Agig::Session < Net::IRC::Server::Session
 
   def reachable_url_for(latest_comment_url)
     repos_owner = latest_comment_url.match(/repos\/(.+?\/.+?)\//)[1]
-    if issue_match = latest_comment_url.match(/issues\/(\d+?)$/)
+    if issue_match = latest_comment_url.match(/(?:issues|pulls)\/(\d+?)$/)
       issue_id = issue_match[1]
-      client.issue_comments(repos_owner, issue_id).html_url
-    end
-    if pull_match = latest_comment_url.match(/pulls\/(\d+?)$/)
-      pull_id = pull_match[1]
-      client.issue_comments(repos_owner, pull_id).html_url
-    end
-    if comment_match = latest_comment_url.match(/comments\/(\d+?)$/)
+      client.issue_comments(repos_owner, issue_id)[0]['html_url']
+    elsif comment_match = latest_comment_url.match(/comments\/(\d+?)$/)
       comment_id = comment_match[1]
-      client.issue_comment(repo_owner, comment_id).html_url
+      client.issue_comment(repo_owner, comment_id)[0]['html_url']
+    else
+      nil
     end
   end
 end
