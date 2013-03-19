@@ -20,4 +20,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'net-irc'
   gem.add_dependency 'json'
   gem.add_dependency 'octokit'
+
+  gem.add_development_dependency 'rspec'
 end
