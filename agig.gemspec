@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'net-irc'
   gem.add_dependency 'json'
+  gem.add_dependency 'faraday', '~> 0.8.7'
   gem.add_dependency 'octokit'
 
   gem.add_development_dependency 'rspec'
