@@ -22,7 +22,11 @@ class Agig::Session < Net::IRC::Server::Session
   end
 
   def client
-    @client ||= Octokit::Client.new(login: @nick, password: @pass)
+    @client ||= if @opts["oauth_token"]
+                  Octokit::Client.new(oauth_token: @pass)
+                else
+                  Octokit::Client.new(login: @nick, password: @pass)
+                end
   end
 
   def on_disconnected
