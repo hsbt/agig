@@ -9,7 +9,7 @@ class Agig::Session < Net::IRC::Server::Session
   end
 
   def server_version
-    "0.0.0"
+    Agig::VERSION
   end
 
   def channels
