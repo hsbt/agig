@@ -88,6 +88,8 @@ class Agig::Session < Net::IRC::Server::Session
     end
   end
 
+  private
+
   def reachable_url_for(latest_comment_url)
     repos_owner = latest_comment_url.match(/repos\/(.+?\/.+?)\//)[1]
     if issue_match = latest_comment_url.match(/(?:issues|pulls)\/(\d+?)$/)

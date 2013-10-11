@@ -7,7 +7,7 @@ describe Agig::Session do
   end
 
   describe '#reachable_url_for' do
-    subject { @session.reachable_url_for(latest_comment_url) }
+    subject { @session.send(:reachable_url_for, latest_comment_url) }
 
     context 'When "https://api.github.com/repos/fastladder/fastladder/pulls/170" given' do
       before do
