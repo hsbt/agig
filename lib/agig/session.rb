@@ -57,7 +57,7 @@ class Agig::Session < Net::IRC::Server::Session
 
   private
 
-  def retrieve
+  def retrieve(interval=30)
     @log.info 'retrieveing feed...'
 
     entries = client.notifications(all: true)
@@ -83,7 +83,7 @@ class Agig::Session < Net::IRC::Server::Session
     end
 
     @log.info 'sleep'
-    sleep 30
+    sleep interval
   rescue Exception => e
     @log.error e.inspect
     e.backtrace.each do |l|
