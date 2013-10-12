@@ -61,7 +61,7 @@ class Agig::Session < Net::IRC::Server::Session
     @log.info 'retrieveing feed...'
 
     entries = client.notifications(all: true)
-    entries.sort_by(&:updated_at).reverse_each do |entry|
+    entries.sort_by(&:updated_at).each do |entry|
       updated_at = Time.parse(entry.updated_at).utc
       next if updated_at <= @notification_last_retrieved
 
@@ -72,7 +72,7 @@ class Agig::Session < Net::IRC::Server::Session
     end
 
     events = client.received_events(@nick)
-    events.sort_by(&:created_at).reverse_each do |event|
+    events.sort_by(&:created_at).each do |event|
       next if event.type != "WatchEvent"
 
       created_at = Time.parse(event.created_at).utc
