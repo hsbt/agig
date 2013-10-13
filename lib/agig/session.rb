@@ -50,42 +50,46 @@ class Agig::Session < Net::IRC::Server::Session
 
     @retrieve_thread = Thread.start do
       loop do
-        begin
-          @log.info 'retrieveing feed...'
-
-          entries = client.notifications(all: true)
-          entries.sort_by(&:updated_at).reverse_each do |entry|
-            updated_at = Time.parse(entry.updated_at).utc
-            next if updated_at <= @notification_last_retrieved
-
-            reachable_url = reachable_url_for(entry.subject.latest_comment_url)
-
-            post entry.repository.owner.login, PRIVMSG, "#notification", "\0035#{entry.subject.title}\017 \00314#{reachable_url}\017"
-            @notification_last_retrieved = updated_at
-          end
-
-          events = client.received_events(@nick)
-          events.sort_by(&:created_at).reverse_each do |event|
-            next if event.type != "WatchEvent"
-
-            created_at = Time.parse(event.created_at).utc
-            next if created_at <= @watch_last_retrieved
-
-            post event.actor.login, PRIVMSG, "#watch", "\0035#{event.payload.action}\017 \00314http://github.com/#{event.repo.name}\017"
-            @watch_last_retrieved = created_at
-          end
-
-          @log.info 'sleep'
-          sleep 30
-        rescue Exception => e
-          @log.error e.inspect
-          e.backtrace.each do |l|
-            @log.error "\t#{l}"
-          end
-          sleep 10
-        end
+        retrieve
       end
     end
+  end
+
+  private
+
+  def retrieve(interval=30)
+    @log.info 'retrieveing feed...'
+
+    entries = client.notifications(all: true)
+    entries.sort_by(&:updated_at).each do |entry|
+      updated_at = Time.parse(entry.updated_at).utc
+      next if updated_at <= @notification_last_retrieved
+
+      reachable_url = reachable_url_for(entry.subject.latest_comment_url)
+
+      post entry.repository.owner.login, PRIVMSG, "#notification", "\0035#{entry.subject.title}\017 \00314#{reachable_url}\017"
+      @notification_last_retrieved = updated_at
+    end
+
+    events = client.received_events(@nick)
+    events.sort_by(&:created_at).each do |event|
+      next if event.type != "WatchEvent"
+
+      created_at = Time.parse(event.created_at).utc
+      next if created_at <= @watch_last_retrieved
+
+      post event.actor.login, PRIVMSG, "#watch", "\0035#{event.payload.action}\017 \00314http://github.com/#{event.repo.name}\017"
+      @watch_last_retrieved = created_at
+    end
+
+    @log.info 'sleep'
+    sleep interval
+  rescue Exception => e
+    @log.error e.inspect
+    e.backtrace.each do |l|
+      @log.error "\t#{l}"
+    end
+    sleep 10
   end
 
   def reachable_url_for(latest_comment_url)
