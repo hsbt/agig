@@ -49,14 +49,14 @@ class Agig::Session < Net::IRC::Server::Session
 
     @retrieve_thread = Thread.start do
       loop do
-        retrieve
+        retrieve @opts.interval
       end
     end
   end
 
   private
 
-  def retrieve(interval=30)
+  def retrieve(interval)
     @log.info 'retrieveing feed...'
 
     entries = client.notifications(all: true)
