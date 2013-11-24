@@ -36,9 +36,8 @@ class Agig::Session < Net::IRC::Server::Session
   def on_user(m)
     super
 
-    @real, *@opts = @real.split(/\s+/)
-    @opts = OpenStruct.new @opts.inject({}) {|r, i|
-      key, value = i.split("=", 2)
+    @opts = OpenStruct.new @opts.marshal_dump.inject({}) {|r, i|
+      key, value = i[0], i[1]
       r.update key => case value
                       when nil                      then true
                       when /\A\d+\z/                then value.to_i
