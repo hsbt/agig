@@ -47,6 +47,18 @@ module Agig::OptParser
       end
     end
 
-    opts
+    self.cast opts
+  end
+
+  def self.cast(opts)
+    opts.inject({}) {|r, i|
+      key, value = i[0], i[1]
+      r.update key => case value
+                      when nil                      then true
+                      when /\A\d+\z/                then value.to_i
+                      when /\A(?:\d+\.\d*|\.\d+)\z/ then value.to_f
+                      else                               value
+                      end
+    }
   end
 end

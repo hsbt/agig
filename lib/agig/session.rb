@@ -36,15 +36,6 @@ class Agig::Session < Net::IRC::Server::Session
   def on_user(m)
     super
 
-    @opts = OpenStruct.new @opts.marshal_dump.inject({}) {|r, i|
-      key, value = i[0], i[1]
-      r.update key => case value
-                      when nil                      then true
-                      when /\A\d+\z/                then value.to_i
-                      when /\A(?:\d+\.\d*|\.\d+)\z/ then value.to_f
-                      else                               value
-                      end
-    }
     channels.each{|channel| post @nick, JOIN, channel }
 
     @retrieve_thread = Thread.start do
