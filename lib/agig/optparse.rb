@@ -5,6 +5,7 @@ module Agig::OptParser
     opts = {
       :port  => 16705,
       :host  => "localhost",
+      :interval => 30,
       :log   => nil,
       :debug => false,
       :foreground => false,
@@ -22,6 +23,10 @@ module Agig::OptParser
 
         on("-h", "--host [HOST=#{opts[:host]}]", "host name or IP address to listen") do |host|
           opts[:host] = host
+        end
+
+        on("-i", "--interval [INTERVAL=#{opts[:interval]}]", "set a retrieving interval") do |interval|
+          opts[:interval] = interval
         end
 
         on("-l", "--log LOG", "log file") do |log|
@@ -42,6 +47,18 @@ module Agig::OptParser
       end
     end
 
-    opts
+    self.cast opts
+  end
+
+  def self.cast(opts)
+    opts.inject({}) {|r, i|
+      key, value = i[0], i[1]
+      r.update key => case value
+                      when nil                      then true
+                      when /\A\d+\z/                then value.to_i
+                      when /\A(?:\d+\.\d*|\.\d+)\z/ then value.to_f
+                      else                               value
+                      end
+    }
   end
 end

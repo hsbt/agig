@@ -12,6 +12,9 @@ Modified from original gig.rb:
     $ gem install agig
     $ agig -d
 
+    # setting a retrieving interval second.
+    $ agig -i 60
+
 ## Contributing
 
 1. Fork it

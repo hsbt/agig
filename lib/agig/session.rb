@@ -36,28 +36,18 @@ class Agig::Session < Net::IRC::Server::Session
   def on_user(m)
     super
 
-    @real, *@opts = @real.split(/\s+/)
-    @opts = OpenStruct.new @opts.inject({}) {|r, i|
-      key, value = i.split("=", 2)
-      r.update key => case value
-                      when nil                      then true
-                      when /\A\d+\z/                then value.to_i
-                      when /\A(?:\d+\.\d*|\.\d+)\z/ then value.to_f
-                      else                               value
-                      end
-    }
     channels.each{|channel| post @nick, JOIN, channel }
 
     @retrieve_thread = Thread.start do
       loop do
-        retrieve
+        retrieve @opts.interval
       end
     end
   end
 
   private
 
-  def retrieve(interval=30)
+  def retrieve(interval)
     @log.info 'retrieveing feed...'
 
     entries = client.notifications(all: true)
