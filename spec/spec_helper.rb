@@ -10,5 +10,5 @@ def fixture_path
   spec_path + '/fixtures'
 end
 
-RSpec.configure do |config|
-end
+require 'coveralls'
+Coveralls.wear!

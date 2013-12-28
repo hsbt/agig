@@ -22,6 +22,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'faraday', '~> 0.8.7'
   gem.add_dependency 'octokit', '~> 1.25'
 
+  gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'webmock'
+  gem.add_development_dependency 'coveralls'
 end
