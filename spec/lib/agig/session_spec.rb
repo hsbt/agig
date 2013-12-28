@@ -29,9 +29,9 @@ describe Agig::Session do
       %w(/notifications?all=true /users/received_events).each do |path|
         stub_request(:get, "https://api.github.com#{path}")
         .to_return(
-          :status  => 200,
-          :headers => { 'Content-Type' => 'application/json; charset=utf-8' },
-          :body    => open("#{fixture_path}#{path}.json").read)
+          status: 200,
+          headers: { 'Content-Type' => 'application/json; charset=utf-8' },
+          body: open("#{fixture_path}#{path}.json").read)
       end
     end
 

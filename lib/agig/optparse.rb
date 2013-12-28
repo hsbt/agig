@@ -3,12 +3,12 @@ require "optparse"
 module Agig::OptParser
   def self.parse!(argv)
     opts = {
-      :port  => 16705,
-      :host  => "localhost",
-      :interval => 30,
-      :log   => nil,
-      :debug => false,
-      :foreground => false,
+      port: 16705,
+      host: "localhost",
+      interval: 30,
+      log: nil,
+      debug: false,
+      foreground: false,
     }
 
     OptionParser.new do |parser|
