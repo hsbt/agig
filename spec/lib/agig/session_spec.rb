@@ -24,7 +24,7 @@ describe Agig::Session do
     end
 
     before do
-      @session.stub(:reachable_url_for).and_return('')
+      allow(@session).to receive(:reachable_url_for).and_return('')
 
       %w(/notifications?all=true /users/received_events).each do |path|
         stub_request(:get, "https://api.github.com#{path}")
@@ -67,11 +67,11 @@ describe Agig::Session do
 
     context 'When "https://api.github.com/repos/fastladder/fastladder/pulls/170" given' do
       before do
-        @session.stub_chain(:client, :issue_comments).and_return([])
+        allow(@session).to receive_message_chain(:client, :issue_comments).and_return([])
       end
 
       let(:latest_comment_url) { 'https://api.github.com/repos/fastladder/fastladder/pulls/170' }
-      it { should eq('https://github.com/fastladder/fastladder/pull/170') }
+      it { is_expected.to eq('https://github.com/fastladder/fastladder/pull/170') }
     end
   end
 end
