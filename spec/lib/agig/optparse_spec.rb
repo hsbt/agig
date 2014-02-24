@@ -20,15 +20,15 @@ describe Agig::OptParser do
     end
     context 'when nil given' do
       let(:opts) { { log: nil } }
-      it { expect(subject[:log]).to be_true }
+      it { expect(subject[:log]).to be_truthy }
     end
     context 'when true given' do
       let(:opts) { { debug: true } }
-      it { expect(subject[:debug]).to be_true }
+      it { expect(subject[:debug]).to be_truthy }
     end
     context 'when false given' do
       let(:opts) { { foreground: false } }
-      it { expect(subject[:foreground]).to be_false }
+      it { expect(subject[:foreground]).to be_falsey }
     end
   end
 
