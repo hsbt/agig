@@ -1,4 +1,6 @@
-# Agig
+# agig
+
+[![Gem Version](https://badge.fury.io/rb/atig.png)](https://rubygems.org/gems/atig) [![Code Climate](https://codeclimate.com/github/hsbt/agig.png)](https://codeclimate.com/github/hsbt/agig) [![Build Status](https://travis-ci.org/hsbt/agig.png)](https://travis-ci.org/hsbt/agig)
 
 Agig is another Github IRC Gateway, forked cho45's [gig.rb](https://github.com/cho45/net-irc/blob/master/examples/gig.rb)
 
@@ -26,4 +28,6 @@ Modified from original gig.rb:
 ## Contributor
 
  * @morygonzalez
-
+ * @taketin
+ * @mizoR
+ * @ykzts
