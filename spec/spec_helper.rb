@@ -1,6 +1,8 @@
 require 'bundler/setup'
-require 'agig'
 require 'webmock/rspec'
+require 'pry-byebug'
+
+require 'agig'
 
 def spec_path
   File.dirname(__FILE__)
