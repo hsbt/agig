@@ -18,8 +18,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = Gem::Requirement.new(">= 1.9.3")
 
   gem.add_dependency 'net-irc'
-  gem.add_dependency 'faraday', '~> 0.8.7'
-  gem.add_dependency 'octokit', '~> 1.25'
+  gem.add_dependency 'octokit'
 
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'rake'
