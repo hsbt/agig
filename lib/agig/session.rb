@@ -52,7 +52,7 @@ class Agig::Session < Net::IRC::Server::Session
 
     entries = client.notifications(all: true)
     entries.sort_by(&:updated_at).each do |entry|
-      updated_at = Time.parse(entry.updated_at).utc
+      updated_at = Time.parse(entry.updated_at.to_s).utc
       next if updated_at <= @notification_last_retrieved
 
       reachable_url = reachable_url_for(entry.subject.latest_comment_url)
@@ -65,7 +65,7 @@ class Agig::Session < Net::IRC::Server::Session
     events.sort_by(&:created_at).each do |event|
       next if event.type != "WatchEvent"
 
-      created_at = Time.parse(event.created_at).utc
+      created_at = Time.parse(event.created_at.to_s).utc
       next if created_at <= @watch_last_retrieved
 
       post event.actor.login, PRIVMSG, "#watch", "\0035#{event.payload.action}\017 \00314http://github.com/#{event.repo.name}\017"
