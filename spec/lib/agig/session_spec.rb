@@ -26,7 +26,7 @@ describe Agig::Session do
     before do
       allow(@session).to receive(:reachable_url_for).and_return('')
 
-      %w(/notifications?all=true /users/received_events).each do |path|
+      %w(/notifications?all=true /user/received_events).each do |path|
         stub_request(:get, "https://api.github.com#{path}")
         .to_return(
           status: 200,
