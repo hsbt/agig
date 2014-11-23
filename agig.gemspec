@@ -18,6 +18,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = Gem::Requirement.new(">= 1.9.3")
 
   gem.add_dependency 'net-irc'
+  gem.add_dependency 'string-irc'
   gem.add_dependency 'octokit'
 
   gem.add_development_dependency 'bundler'

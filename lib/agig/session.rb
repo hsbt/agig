@@ -1,6 +1,7 @@
 require 'ostruct'
 require 'time'
 require 'net/irc'
+require 'string-irc'
 require 'octokit'
 
 class Agig::Session < Net::IRC::Server::Session
@@ -51,9 +52,10 @@ class Agig::Session < Net::IRC::Server::Session
       updated_at = Time.parse(entry.updated_at.to_s).utc
       next if updated_at <= @notification_last_retrieved
 
-      reachable_url = reachable_url_for(entry.subject.latest_comment_url)
+      title = StringIrc.new(entry.subject.title).brown.to_s
+      url = StringIrc.new(reachable_url_for(entry.subject.latest_comment_url)).grey.to_s
 
-      post entry.repository.owner.login, PRIVMSG, "#notification", "\0035#{entry.subject.title}\017 \00314#{reachable_url}\017"
+      post entry.repository.owner.login, PRIVMSG, "#notification", "#{title} #{url}"
       @notification_last_retrieved = updated_at
     end
 
@@ -64,7 +66,10 @@ class Agig::Session < Net::IRC::Server::Session
       created_at = Time.parse(event.created_at.to_s).utc
       next if created_at <= @watch_last_retrieved
 
-      post event.actor.login, PRIVMSG, "#watch", "\0035#{event.payload.action}\017 \00314http://github.com/#{event.repo.name}\017"
+      action = StringIrc.new(event.payload.action).brown.to_s
+      url = StringIrc.new("http://github.com/#{event.repo.name}").grey.to_s
+
+      post event.actor.login, PRIVMSG, "#watch", "#{action} #{url}"
       @watch_last_retrieved = created_at
     end
 
